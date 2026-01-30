@@ -12,7 +12,7 @@ import numpy as np
 import pytesseract
 import threading
 import whisper
-#import yt_dlp
+import yt_dlp
 import fitz
 import time
 import cv2
@@ -101,7 +101,6 @@ def ocr(path,lang="eng",DB_PATH=None,query=None, temperature=None, model=None):
     else:
         return full
 
-"""
 @app.post("/ytvideo)
 def get_transcript(link,output_path,DB_PATH=None,query=None, temperature=None, model=None):
     url = link
@@ -129,7 +128,7 @@ def get_transcript(link,output_path,DB_PATH=None,query=None, temperature=None, m
     if query is not None and DB_PATH is not None:
         return retrieval(DB_PATH=DB_PATH,query=query,texts=text,temperature=temperature,model=model)
     else:
-        return text"""
+        return text
 
 @app.post("/video")
 def local_video_processing(video_path,DB_PATH=None,query=None, temperature=None, model=None):
@@ -202,6 +201,9 @@ async def ingest_file(
 
         elif ext == "mp4":
             result = local_video_processing(video_path=file_path, DB_PATH=DB_PATH, query=query, temperature=temperature, model=model)
+
+        elif link:
+            result = get_transcript(link, DB_PATH, query, output_path)
         
         else:
             return JSONResponse({"response": "Unsupported file type"})
@@ -210,11 +212,6 @@ async def ingest_file(
         return JSONResponse({"response": "No input provided"})
 
     return JSONResponse({"response": result})
-        
-    """# ---------- LINK MODE ----------
-    elif link:
-        result = get_transcript(link, DB_PATH, query, output_path)"""
-
 
 #RETRIEVAL
 def retrieval(texts,DB_PATH,query,emb=HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2"), temperature=None, model=None):
