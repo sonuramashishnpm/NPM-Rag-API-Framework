@@ -1,0 +1,16 @@
+PyMuPDF
+pytesseract
+numpy
+pdf2image
+python-multipart
+opencv-python-headless
+openai-whisper
+npmai
+langchain
+langchain-community
+langchain-core
+langchain-classic
+langchain-text-splitters
+faiss-cpu
+fastapi
+sentence-transformers
