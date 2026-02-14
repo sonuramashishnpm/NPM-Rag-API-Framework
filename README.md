@@ -164,18 +164,6 @@ temperature = 0.7
 
 ---
 
-## 📁 Project Structure
-
-```
-.
-├── main.py
-├── uploads/
-├── vector_db/
-└── README.md
-```
-
----
-
 ## ⚠️ Notes
 
 - GPU is disabled (`CUDA_VISIBLE_DEVICES=""`)
@@ -193,7 +181,7 @@ temperature = 0.7
 - Background task queue
 - Better refine logic
 - Support for multiple vector stores
-- Docker support
+- Use through ##Docker
 
 ---
 
@@ -207,7 +195,7 @@ temperature = 0.7
 - Tesseract OCR
 - PyMuPDF
 - yt-dlp
-- Ollama (NPMAI)
+- ##npmai
 
 ---
 
