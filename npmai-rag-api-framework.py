@@ -1,10 +1,13 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_community.vectorstores import FAISS
+from langchain_ollama.llms import OllamaLLM
 from fastapi import FastAPI, UploadFile, File, Form 
 from fastapi.responses import JSONResponse
 from moviepy.editor import VideoFileClip
 from pdf2image import convert_from_path
+from pydantic import BaseModel
 from fastapi import FastAPI
 from npmai import Ollama
 from PIL import Image
@@ -12,7 +15,7 @@ import numpy as np
 import pytesseract
 import threading
 import whisper
-import yt_dlp
+#import yt_dlp
 import fitz
 import time
 import cv2
@@ -101,6 +104,7 @@ def ocr(path,lang="eng",DB_PATH=None,query=None, temperature=None, model=None):
     else:
         return full
 
+"""
 @app.post("/ytvideo)
 def get_transcript(link,output_path,DB_PATH=None,query=None, temperature=None, model=None):
     url = link
@@ -128,7 +132,7 @@ def get_transcript(link,output_path,DB_PATH=None,query=None, temperature=None, m
     if query is not None and DB_PATH is not None:
         return retrieval(DB_PATH=DB_PATH,query=query,texts=text,temperature=temperature,model=model)
     else:
-        return text
+        return text"""
 
 @app.post("/video")
 def local_video_processing(video_path,DB_PATH=None,query=None, temperature=None, model=None):
@@ -160,6 +164,7 @@ def text_processes(path,DB_PATH=None,query=None, temperature=None, model=None):
 def health():
     return {"ok":True}
     
+
 @app.post("/ingestion")
 async def ingest_file(
     query: str = Form(None),
@@ -201,9 +206,6 @@ async def ingest_file(
 
         elif ext == "mp4":
             result = local_video_processing(video_path=file_path, DB_PATH=DB_PATH, query=query, temperature=temperature, model=model)
-
-        elif link:
-            result = get_transcript(link, DB_PATH, query, output_path)
         
         else:
             return JSONResponse({"response": "Unsupported file type"})
@@ -212,9 +214,14 @@ async def ingest_file(
         return JSONResponse({"response": "No input provided"})
 
     return JSONResponse({"response": result})
+        
+    """# ---------- LINK MODE ----------
+    elif link:
+        result = get_transcript(link, DB_PATH, query, output_path)"""
+
 
 #RETRIEVAL
-def retrieval(texts,DB_PATH,query,emb=HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2"), temperature=None, model=None):
+def retrieval(texts,DB_PATH,query,emb=HuggingFaceBgeEmbeddings(model_name="BAAI/bge-small-en-v1.5",model_kwargs={"device":"cpu"},encode_kwargs = {"normalize_embeddings": True},query_instruction="Represent this sentence for searching relevant passages: "), temperature=None, model=None):
   if DB_PATH is not None and query is not None:
       print("1")
       if os.path.exists(DB_PATH):
@@ -225,7 +232,7 @@ def retrieval(texts,DB_PATH,query,emb=HuggingFaceEmbeddings(model_name="all-Mini
           )
           print("2")
           retriever=vector_db.similarity_search(query,k=4)
-          return preref(retriever,query=query,temperature=temperature,model=model)
+          return preref(text=retriever,question=query,temperature=temperature,model=model)
       
       else:
           print("3")
@@ -239,13 +246,13 @@ def retrieval(texts,DB_PATH,query,emb=HuggingFaceEmbeddings(model_name="all-Mini
           vector_db.save_local(DB_PATH)
           
           retriever=vector_db.similarity_search(query,k=4)
-          return preref(retriever,query,temperature=temperature,model=model)
+          return preref(text=retriever,question=query,temperature=temperature,model=model)
   else:
       return "Sorry but you have to provide query and DB_PATH also in order to retrieve from Vectorised DataBase"
 
   
 #REFINE INITIALISATION
-def preref(text,question, temperature, model):
+def preref(text,question, temperature, model, **kwargs):
   ref=refine(
       text=text,
       question=question,
