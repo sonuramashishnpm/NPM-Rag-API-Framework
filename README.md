@@ -1,4 +1,4 @@
-## NPMAI-RAG-API-Pipeline
+# NPMAI-RAG-API-Pipeline
 
 A powerful **FastAPI-based multi-modal ingestion system** that processes PDFs, scanned documents, images, videos, YouTube links, and text files — then optionally performs semantic retrieval using FAISS + HuggingFace embeddings and refines answers using an LLM (Ollama via NPMAI).
 
