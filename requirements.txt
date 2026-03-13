@@ -14,3 +14,4 @@ langchain-text-splitters
 faiss-cpu
 fastapi
 sentence-transformers
+supabase
