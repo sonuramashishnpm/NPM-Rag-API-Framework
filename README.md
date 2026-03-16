@@ -23,7 +23,7 @@ A powerful **FastAPI-based multi-modal ingestion system** that processes PDFs, s
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/sonuramashishnpm/NPM-Rag-API-Framework)
 
 ## Workflow:-
-<img src="https://i.ibb.co/qYJd6Nhw/NPMAI-Rag-API-Pipeline.png" alt="Example Screenshot" width="700" style="display: block; margin: 0 auto; margin-left:20px">
+<img src="https://i.ibb.co/W43CqndR/NPMAI-RAG-API-Pipleline.png" alt="Example Screenshot" width="1100" style="display: block; margin: 0 auto; margin-left:20px">
 
 ## 🏗 Architecture Overview
 
