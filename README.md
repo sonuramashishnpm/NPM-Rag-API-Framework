@@ -16,6 +16,7 @@ A powerful **FastAPI-based multi-modal ingestion system** that processes PDFs, s
 - 🔎 Semantic similarity search
 - ♻️ Iterative refinement using LLM (Ollama)
 - 🗂 Automatic ingestion routing based on file type
+- Supabse Storage for persistent storage.
 
 ---
 
